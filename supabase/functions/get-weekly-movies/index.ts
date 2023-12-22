@@ -30,7 +30,7 @@ const ACCESS_TOKEN: string = Deno.env.get('MOVIE_DB_ACCESS_TOKEN') ?? '';
  */
 async function fetchMoviesPage(page: number): Promise<Array<object> | undefined> {
   try {
-    const response = await fetch(`https://api.themoviedb.org/3/movie/popular?language=uk-UK&page=${page}&region=ua`, {
+    const response = await fetch(`https://api.themoviedb.org/3/trending/movie/week?language=uk-UK`, {
       headers: {
         accept: 'application/json',
         Authorization: `Bearer ${ACCESS_TOKEN}`
@@ -116,7 +116,7 @@ async function checkMoviesInSupabase(titles: string[]): Promise<Array<object>> {
  */
 Deno.serve(async (_req) => {
   try {
-    const pagesToFetch = 5;
+    const pagesToFetch = 1;
     const movies = await Promise.all([...Array(pagesToFetch)].map((_, i) => fetchMoviesPage(i + 1)));
     const allMovies = movies.flat();
     const titles = allMovies.map((movie: any) => movie.original_title);
