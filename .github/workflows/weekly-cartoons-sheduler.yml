@@ -1,4 +1,4 @@
-name: Weekly Serials Trigger
+name: Weekly Cartoon Trigger
 
 on:
   schedule:
@@ -12,6 +12,6 @@ jobs:
       env:
         SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
       run: |
-        curl -L -X POST 'https://ybrwimxtjailumgoocni.supabase.co/functions/v1/get-weekly-serials' \
+        curl -L -X POST 'https://ybrwimxtjailumgoocni.supabase.co/functions/v1/get-weekly-cartoons' \
         -H 'Authorization: Bearer $SUPABASE_ANON_KEY' \
         --data '{"name":"Functions"}'
