@@ -2,7 +2,7 @@ name: Weekly Movies Trigger
 
 on:
   schedule:
-    - cron: '*/10 * * * *'
+    - cron: '0 2,14 * * *'
 
 jobs:
   trigger-supabase-function:

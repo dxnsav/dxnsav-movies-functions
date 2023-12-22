@@ -97,8 +97,8 @@ async function checkMoviesInSupabase(titles: string[]): Promise<Array<object>> {
       .from('movie')
       .select('*')
       .eq('title_en', title)
-      .neq('movie_url', null)
-      .eq('movie_type', 'serial');
+      .or('serial_data.not.is.null,movie_url.not.is.null')
+      .in('movie_type', ['serial', 'anime', 'cartoonSerial']);
 
     if (data && data.length > 0) {
       foundMovies.push(data[0]);
