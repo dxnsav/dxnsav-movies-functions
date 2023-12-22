@@ -30,7 +30,7 @@ const ACCESS_TOKEN: string = Deno.env.get('MOVIE_DB_ACCESS_TOKEN') ?? '';
  */
 async function fetchMoviesPage(page: number): Promise<Array<object> | undefined> {
   try {
-    const response = await fetch(`https://api.themoviedb.org/3/discover/tv?include_adult=false&language=uk-UK&page=${page}&sort_by=popularity.desc`, {
+    const response = await fetch(`https://api.themoviedb.org/3/movie/popular?language=uk-UK&page=${page}&region=ua`, {
       headers: {
         accept: 'application/json',
         Authorization: `Bearer ${ACCESS_TOKEN}`
