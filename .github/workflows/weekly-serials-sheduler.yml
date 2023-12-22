@@ -12,6 +12,6 @@ jobs:
       env:
         SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
       run: |
-        curl -L -X POST 'https://ybrwimxtjailumgoocni.supabase.co/functions/v1/get-weekly-movies' \
+        curl -L -X POST 'https://ybrwimxtjailumgoocni.supabase.co/functions/v1/get-weekly-serials' \
         -H 'Authorization: Bearer $SUPABASE_ANON_KEY' \
         --data '{"name":"Functions"}'
