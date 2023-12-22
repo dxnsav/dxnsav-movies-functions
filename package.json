@@ -1,0 +1,19 @@
+{
+  "name": "dxnsav-movies-functions",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "supabase functions to parse data from eneyida.tv",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "supabase",
+    "dxnsav"
+  ],
+  "author": "dxnsav",
+  "license": "ISC",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.1"
+  }
+}
