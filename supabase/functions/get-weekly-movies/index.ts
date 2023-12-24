@@ -13,6 +13,8 @@ import { createClient, SupabaseClient } from 'https://esm.sh/@supabase/supabase-
 const supabaseUrl: string = Deno.env.get('SUPABASE_URL') ?? '';
 /** @type {string} Supabase anonymous key */
 const supabaseKey: string = Deno.env.get('SUPABASE_ANON_KEY') ?? '';
+/** @type {string} tmdb anonymous key */
+const tmdbKey: string = Deno.env.get('TMDB_KEY') ?? '';
 
 // Initialize the Supabase client
 /** @type {SupabaseClient} Our Supabase client instance */
@@ -71,9 +73,15 @@ async function saveMoviesToSupabase(foundMovies: Array<unknown>, allMovies: Arra
       return;
     }
 
+    const moviesToSaveWithBackdrop = await Promise.all(moviesToSave.slice(0, 20).map(async (movie: any) => {
+      const backdrop = await fetchTmdbBackdrop(movie.tmdb_id);
+      return Object.assign({}, movie, { backdrop });
+    }
+    ));
+
     const insertResponse = await supabase
       .from('weekly_movies')
-      .insert(moviesToSave.slice(0, 20));
+      .insert(moviesToSaveWithBackdrop);
 
 
     if (insertResponse.error) {
@@ -107,6 +115,48 @@ async function checkMoviesInSupabase(titles: string[]): Promise<Array<object>> {
 
   return foundMovies;
 }
+
+/**
+ * Fetch a backdrop image with preference for Ukrainian language. If no Ukrainian backdrop is available,
+ * it will fetch an English one. The fetch is done from themoviedb.org API.
+ *
+ * @async
+ * @function
+ * @param {number} tmdbId - The id of the movie from themoviedb.org.
+ * @returns {Promise<string | null>} A promise that resolves to the URL of the backdrop image or null if none is found.
+ *
+ * @example
+ * // Usage:
+ * fetchTmdbBackdrop(12345)
+ *   .then(backdropUrl => console.log(backdropUrl))
+ *   .catch(e => console.error(e));
+ */
+const fetchTmdbBackdrop = async (tmdbId: number) => {
+  const options = {
+    headers: {
+      Authorization: `Bearer ${tmdbKey}`,
+      accept: 'application/json'
+    },
+    method: 'GET'
+  }
+
+  const fetchTmdb = async (language: string) => {
+    const response = await fetch(`https://api.themoviedb.org/3/movie/${tmdbId}/images?include_image_language=${language}`, options);
+    const data = await response.json();
+    return data?.backdrops?.length ? `https://image.tmdb.org/t/p/w500${data.backdrops[0].file_path}` : null;
+  }
+
+  // Try to get backdrop with Ukrainian language
+  let backdrop = await fetchTmdb('uk');
+
+  // If no data, call again with English
+  if (!backdrop) {
+    backdrop = await fetchTmdb('en');
+  }
+
+  return backdrop;
+}
+
 
 /**
  * Main handler for the Edge Function.
