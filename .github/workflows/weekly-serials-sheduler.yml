@@ -10,8 +10,10 @@ jobs:
     steps:
     - name: Trigger Supabase Function
       env:
+        SUPABASE_JWT: ${{ secrets.SUPABASE_ANON_KEY }}
         SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        TMDB_KEY: ${{ secrets.TMDB_KEY }}
       run: |
         curl -L -X POST 'https://ybrwimxtjailumgoocni.supabase.co/functions/v1/get-weekly-serials' \
-        -H 'Authorization: Bearer $SUPABASE_ANON_KEY' \
+        -H 'Authorization: Bearer $SUPABASE_JWT' \
         --data '{"name":"Functions"}'
